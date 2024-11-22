@@ -1,0 +1,68 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_template_new' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var $collectionHolder = document.querySelector('.fields-collection');
+            var $addButton = document.querySelector('.add-field-button');
+            var prototype = $collectionHolder.dataset.prototype;
+            var index = $collectionHolder.children.length;
+
+            $addButton.addEventListener('click', function() {
+                var newForm = prototype.replace(/__name__/g, index);
+                var div = document.createElement('div');
+                div.classList.add('field-item');
+                div.innerHTML = newForm + 
+                    '<button type="button" class="btn btn-danger remove-field">Usuń pole</button>';
+                $collectionHolder.appendChild(div);
+                index++;
+            });
+
+            $collectionHolder.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-field')) {
+                    e.target.parentElement.remove();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <h1>{{ 'title.template_new'|trans }}</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.systemName) }}
+        {{ form_row(form.displayName) }}
+        {{ form_row(form.isVisible) }}
+        
+        <div class="form-group">
+            <p>{{ 'template.label.fields'|trans }}</p>
+            <div class="fields-collection" 
+                 data-prototype="{{ form_widget(form.fields.vars.prototype)|e('html_attr') }}">
+                {% for field in form.fields %}
+                    <div class="field-item">
+                        {{ form_widget(field) }}
+                        <button type="button" class="btn btn-danger remove-field">{{ 'action.delete_item'|trans }}</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-success add-field-button mt-2">
+                {{ 'action.add_field'|trans }}
+            </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-save" aria-hidden="true"></i> {{ 'label.create_template'|trans }}
+        </button>
+        <a href="{{ path('admin_template_index') }}" class="btn btn-link">
+            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.template_back_to_list'|trans }}
+        </a>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block sidebar %}
+    {{ parent() }}
+{% endblock %}

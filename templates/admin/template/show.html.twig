@@ -1,0 +1,74 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_template_show' %}
+
+{% block main %}
+    <h1>{{ template.displayName }}</h1>
+
+    <div class="jumbotron">
+        <code>
+            Nazwa systemowa: {{ template.systemName }}
+        </code>
+    </div>
+    <div>
+        <p>
+            Widoczny: {{ template.isVisible ? 'Tak' : 'Nie' }}
+        </p>
+    </div>
+    <div>
+        <p>
+            Pola: {{ template.fields|length }}
+        </p>
+    </div>
+    {% for field in fields %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong>Nazwa wyświetlana:</strong> 
+                            <span class="text-primary">{{ field.displayName }}</span>
+                        </p>
+                        <p class="mb-2">
+                            <strong>Nazwa systemowa:</strong>
+                            <code>{{ field.systemName }}</code>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong>Wymagane:</strong>
+                            <span class="badge {{ field.isRequired ? 'bg-danger' : 'bg-success' }}">
+                                {{ field.isRequired ? 'Tak' : 'Nie' }}
+                            </span>
+                        </p>
+                        <p class="mb-2">
+                            <strong>Typ:</strong>
+                            <span class="badge bg-info">{{ field.fieldType }}</span>
+                        </p>
+                        <p class="mb-0">
+                            Parametry: <code>{{ field.parameters|json_encode(constant('JSON_PRETTY_PRINT')) }}</code>
+                        </p>
+                    </div>
+                </div>
+                {# {{ dump(field) }} #}
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+
+{% block sidebar %}
+    <div class="section">
+        <a href="{{ path('admin_template_edit', {id: template.id}) }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-edit" aria-hidden="true"></i> {{ 'action.edit_contents'|trans }}
+        </a>
+    </div>
+
+    <div class="section">
+        {{ include('admin/template/_delete_form.html.twig', {template: template}, with_context = false) }}
+    </div>
+
+    {{ parent() }}
+
+    {{ show_source_code(_self) }}
+{% endblock %}

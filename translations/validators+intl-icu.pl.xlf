@@ -30,6 +30,30 @@
                 <source>comment.is_spam</source>
                 <target>Twój komentarz został uznany za spam.</target>
             </trans-unit>
+            <trans-unit id="template.blank_system_name">
+                <source>template.blank_system_name</source>
+                <target>Nazwa systemowa nie może być pusta!</target>
+            </trans-unit>
+            <trans-unit id="template.invalid_system_name">
+                <source>template.invalid_system_name</source>
+                <target>Nazwa systemowa może zawierać tylko litery w formacie camelCase!</target>
+            </trans-unit>
+            <trans-unit id="template.blank_display_name">
+                <source>template.blank_display_name</source>
+                <target>Nazwa wyświetlana nie może być pusta!</target>
+            </trans-unit>
+            <trans-unit id="template.field.blank_system_name">
+                <source>template.field.blank_system_name</source>
+                <target>Nazwa systemowa pola nie może być pusta!</target>
+            </trans-unit>
+            <trans-unit id="template.field.blank_display_name">
+                <source>template.field.blank_display_name</source>
+                <target>Nazwa wyświetlana pola nie może być pusta!</target>
+            </trans-unit>
+            <trans-unit id="template.field.invalid_type">
+                <source>template.field.invalid_type</source>
+                <target>Nieprawidłowy typ pola!</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
