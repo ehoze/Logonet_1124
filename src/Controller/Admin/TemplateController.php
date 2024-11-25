@@ -158,7 +158,7 @@ final class TemplateController extends AbstractController
         // Delete the tags associated with this blog post. This is done automatically
         // by Doctrine, except for SQLite (the database used in this application)
         // because foreign key support is not enabled by default in SQLite
-        $template->getTags()->clear();
+        $template->getFields()->clear();
 
         $entityManager->remove($template);
         $entityManager->flush();

@@ -41,14 +41,11 @@ class TemplateFieldType extends AbstractType
                     'template.label.select' => 'select'
                 ],
             ])
-            ->add('parameters', CollectionType::class, [
+            ->add('parameters', TextType::class, [
                 'label' => 'template.label.parameters',
                 'required' => false,
-                'entry_type' => TextType::class,
-                'entry_options' => [
-                    'attr' => [
+                'attr' => [
                     'placeholder' => '{"maxLength": 255} lub {"options": ["opcja1", "opcja2"]}'
-                    ]
                 ]
             ]);
     }
