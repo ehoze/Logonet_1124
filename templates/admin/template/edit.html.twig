@@ -1,0 +1,29 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_post_edit' %}
+
+{% block main %}
+    <h1>{{ 'title.edit_template'|trans({'id': template.id}) }}</h1>
+
+    {{ include('admin/blog/_form.html.twig', {
+        form: form,
+        button_label: 'action.save'|trans,
+        include_back_to_home_link: true,
+    }, with_context = false) }}
+{% endblock %}
+
+{% block sidebar %}
+    <div class="section">
+        <a href="{{ path('admin_template_show', {id: template.id}) }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-eye" aria-hidden="true"></i> {{ 'action.show_template'|trans }}
+        </a>
+    </div>
+
+    <div class="section actions">
+        {{ include('admin/template/_delete_form.html.twig', {template: template}, with_context = false) }}
+    </div>
+
+    {{ parent() }}
+
+    {{ show_source_code(_self) }}
+{% endblock %}

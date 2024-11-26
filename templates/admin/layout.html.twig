@@ -18,9 +18,19 @@
             <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.post_list'|trans }}
         </a>
     </li>
+    <li class="nav-item{{ _route in ['admin_index', 'admin_template_index'] ? ' active' : '' }}">
+        <a class="nav-link" href="{{ path('admin_template_index') }}">
+            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'menu.template_list'|trans }}
+        </a>
+    </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ path('blog_index') }}">
             <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.back_to_blog'|trans }}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('template_search', {systemName: '__start'}) }}">
+            <i class="fa fa-search"></i> {{ 'menu.searchTemplate'|trans }}
         </a>
     </li>
 {% endblock %}

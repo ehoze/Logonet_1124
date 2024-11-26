@@ -17,6 +17,7 @@ use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Security\PostVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\TemplateRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\SubmitButton;
@@ -135,16 +136,48 @@ final class BlogController extends AbstractController
      */
     #[Route('/{id<\d+>}/edit', name: 'admin_post_edit', methods: ['GET', 'POST'])]
     #[IsGranted('edit', subject: 'post', message: 'Posts can only be edited by their authors.')]
-    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, TemplateRepository $templateRepository): Response
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Zachowaj wybrany szablon
+            $templateId = $request->request->get('template_id');
+            if ($templateId) {
+                $template = $templateRepository->find($templateId);
+                $post->setTemplate($template);
+            }
+
+
+            $templateFields = $request->request->all()['template_fields'] ?? [];
+            
+            // Sprawdzenie wymaganych pól szablonu
+            if ($post->getTemplate()) {
+                foreach ($post->getTemplate()->getFields() as $field) {
+                    if ($field->isRequired() && 
+                        (!isset($templateFields[$field->getSystemName()]) || 
+                         empty(trim($templateFields[$field->getSystemName()]))
+                        )
+                    ) {
+                        $this->addFlash('danger', sprintf('Pole "%s" jest wymagane.', $field->getDisplayName()));
+                        return $this->render('admin/blog/edit.html.twig', [
+                            'post' => $post,
+                            'form' => $form,
+                        ]);
+                    }
+                }
+            }
+            
+            $post->setTemplateFields($templateFields);
+            
+
+            
             $entityManager->flush();
+
             $this->addFlash('success', 'post.updated_successfully');
 
-            return $this->redirectToRoute('admin_post_edit', ['id' => $post->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_post_edit', ['id' => $post->getId()]);
         }
 
         return $this->render('admin/blog/edit.html.twig', [
@@ -178,5 +211,22 @@ final class BlogController extends AbstractController
         $this->addFlash('success', 'post.deleted_successfully');
 
         return $this->redirectToRoute('admin_post_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Change the template of a post
+     */
+    #[Route("/admin/post/{id}/change-template", name: "admin_post_change_template", methods: ["POST"])]
+    public function changeTemplate(Request $request, Post $post, TemplateRepository $templateRepository, EntityManagerInterface $entityManager): Response
+    {
+        $templateId = $request->request->get('template');
+        $template = $templateRepository->find($templateId);
+        
+        $post->setTemplate($template);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Template has been changed successfully.');
+        
+        return $this->redirectToRoute('admin_post_edit', ['id' => $post->getId()]);
     }
 }

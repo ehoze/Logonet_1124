@@ -17,7 +17,7 @@ use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use function Symfony\Component\String\u;
-
+use App\Entity\Template;
 /**
  * This custom Doctrine repository contains some methods which are useful when
  * querying for blog post information.
@@ -102,5 +102,47 @@ class PostRepository extends ServiceEntityRepository
         return array_filter($terms, static function ($term) {
             return 2 <= $term->length();
         });
+    }
+
+    public function findByTemplateAndCriteria(Template $template, array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.template = :template')
+            ->setParameter('template', $template);
+
+        if (isset($criteria['fields'])) {
+            foreach ($criteria['fields'] as $fieldName => $value) {
+                $field = $template->getFieldBySystemName($fieldName);
+                
+                if (!$field) {
+                    continue;
+                }
+
+                if ($field->getFieldType() === 'text') {
+                    $qb->andWhere("JSON_GET_FIELD_AS_TEXT(p.templateFields, :field_name) LIKE :value")
+                       ->setParameter('field_name', $fieldName)
+                       ->setParameter('value', '%' . $value . '%');
+                }
+                elseif (in_array($field->getFieldType(), ['date', 'datetime'])) {
+                    if (!empty($value['from'])) {
+                        $qb->andWhere("JSON_GET_FIELD_AS_TEXT(p.templateFields, :field_name) >= :from_date")
+                           ->setParameter('field_name', $fieldName)
+                           ->setParameter('from_date', $value['from']);
+                    }
+                    if (!empty($value['to'])) {
+                        $qb->andWhere("JSON_GET_FIELD_AS_TEXT(p.templateFields, :field_name) <= :to_date")
+                           ->setParameter('field_name', $fieldName)
+                           ->setParameter('to_date', $value['to']);
+                    }
+                }
+                elseif ($field->getFieldType() === 'select' && !empty($value)) {
+                    $qb->andWhere("JSON_GET_FIELD_AS_TEXT(p.templateFields, :field_name) = :value")
+                       ->setParameter('field_name', $fieldName)
+                       ->setParameter('value', $value);
+                }
+            }
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

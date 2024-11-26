@@ -12,6 +12,7 @@
 namespace App\Form;
 
 use App\Entity\Post;
+use App\Entity\Template;
 use App\Form\Type\DateTimePickerType;
 use App\Form\Type\TagsInputType;
 use Symfony\Component\Form\AbstractType;
@@ -21,6 +22,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * Defines the form used to create and manipulate blog posts.
@@ -69,6 +71,12 @@ final class PostType extends AbstractType
             ->add('tags', TagsInputType::class, [
                 'label' => 'label.tags',
                 'required' => false,
+            ])
+            ->add('template', EntityType::class, [
+                'class' => Template::class,
+                'choice_label' => 'displayName',
+                'label' => 'label.template',
+                'required' => true,
             ])
             // form events let you modify information or fields at different steps
             // of the form handling process.

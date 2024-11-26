@@ -15,6 +15,8 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\Tag;
 use App\Entity\User;
+use App\Entity\Template;
+use App\Entity\TemplateField;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -34,6 +36,7 @@ final class AppFixtures extends Fixture
     {
         $this->loadUsers($manager);
         $this->loadTags($manager);
+        $this->loadTemplates($manager);
         $this->loadPosts($manager);
     }
 
@@ -63,6 +66,28 @@ final class AppFixtures extends Fixture
             $this->addReference('tag-'.$name, $tag);
         }
 
+        $manager->flush();
+    }
+
+    private function loadTemplates(ObjectManager $manager): void
+    {
+        $template = new Template();
+        $template->setSystemName('defaultTemplate')
+                ->setDisplayName('Domyślny szablon')
+                ->setIsVisible(true);
+        
+        // Przykładowe pole szablonu
+        $field = new TemplateField();
+        $field->setSystemName('title')
+              ->setDisplayName('Tytuł')
+              ->setIsRequired(true)
+              ->setFieldType('text')
+              ->setParameters(['maxLength' => 255]);
+        
+        $template->addField($field);
+        
+        $manager->persist($template);
+        $manager->persist($field);
         $manager->flush();
     }
 

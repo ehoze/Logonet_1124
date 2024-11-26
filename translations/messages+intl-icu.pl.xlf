@@ -112,6 +112,10 @@
                 <source>action.back_to_list</source>
                 <target>Powrót do listy artykułów</target>
             </trans-unit>
+            <trans-unit id="action.template_back_to_list">
+                <source>action.template_back_to_list</source>
+                <target>Powrót do listy szablonów</target>
+            </trans-unit>
             <trans-unit id="action.publish_comment">
                 <source>action.publish_comment</source>
                 <target>Publikuj komentarz</target>
@@ -169,6 +173,10 @@
                 <source>label.published_at</source>
                 <target>Opublikowano</target>
             </trans-unit>
+            <trans-unit id="label.template">
+                <source>label.template</source>
+                <target>Szablon</target>
+            </trans-unit>
             <trans-unit id="label.actions">
                 <source>label.actions</source>
                 <target>Akcje</target>
@@ -181,7 +189,6 @@
                 <source>action.edit_contents</source>
                 <target>Edycja treści</target>
             </trans-unit>
-
             <trans-unit id="menu.toggle_nav">
                 <source>menu.toggle_nav</source>
                 <target>Przełącz nawigację</target>
@@ -249,7 +256,7 @@
             </trans-unit>
             <trans-unit id="help.browse_app">
                 <source>help.browse_app</source>
-                <target><![CDATA[Przeglądaj <strong>publiczną część</strong> aplikacji demonstracyjnej.]]></target>
+                <target><![CDATA[Przeglądaj <strong>publiczną częś��</strong> aplikacji demonstracyjnej.]]></target>
             </trans-unit>
             <trans-unit id="help.browse_admin">
                 <source>help.browse_admin</source>
@@ -287,6 +294,115 @@
             <trans-unit id="paginator.next">
                 <source>paginator.next</source>
                 <target>Następna</target>
+            </trans-unit>
+            <trans-unit id="action.add_field">
+                <source>action.add_field</source>
+                <target>Dodaj pole</target>
+            </trans-unit>
+            <trans-unit id="action.delete_item">
+                <source>action.delete_item</source>
+                <target>Usuń</target>
+            </trans-unit>
+            <trans-unit id="template.label.fields">
+                <source>template.label.fields</source>
+                <target>Pola szablonu</target>
+            </trans-unit>
+
+            <trans-unit id="title.template_new">
+                <source>title.template_new</source>
+                <target>Nowy szablon</target>
+            </trans-unit>
+            <trans-unit id="label.create_template">
+                <source>label.create_template</source>
+                <target>Utwórz szablon</target>
+            </trans-unit>
+
+            <trans-unit id="template.label.system_name">
+                <source>template.label.system_name</source>
+                <target>Nazwa systemowa</target>
+            </trans-unit>
+            <trans-unit id="template.label.display_name">
+                <source>template.label.display_name</source>
+                <target>Nazwa wyświetlana</target>
+            </trans-unit>
+            <trans-unit id="template.label.is_visible">
+                <source>template.label.is_visible</source>
+                <target>Widoczność</target>
+            </trans-unit>
+
+            <trans-unit id="template.field.system_name">
+                <source>template.field.system_name</source>
+                <target>Nazwa systemowa pola</target>
+            </trans-unit>
+            <trans-unit id="template.field.display_name">
+                <source>template.field.display_name</source>
+                <target>Nazwa wyświetlana pola</target>
+            </trans-unit>
+            <trans-unit id="template.field.is_required">
+                <source>template.field.is_required</source>
+                <target>Pole wymagane</target>
+            </trans-unit>
+            <trans-unit id="template.field.field_type">
+                <source>template.field.field_type</source>
+                <target>Typ pola</target>
+            </trans-unit>
+            <trans-unit id="template.field.parameters">
+                <source>template.field.parameters</source>
+                <target>Parametry</target>
+            </trans-unit>
+
+            <trans-unit id="template.field.type.text">
+                <source>template.field.type.text</source>
+                <target>Pole tekstowe</target>
+            </trans-unit>
+            <trans-unit id="template.field.type.date">
+                <source>template.field.type.date</source>
+                <target>Data</target>
+            </trans-unit>
+            <trans-unit id="template.field.type.datetime">
+                <source>template.field.type.datetime</source>
+                <target>Data i czas</target>
+            </trans-unit>
+            <trans-unit id="template.field.type.select">
+                <source>template.field.type.select</source>
+                <target>Lista wyboru</target>
+            </trans-unit>
+
+            <trans-unit id="template.label.field_type">
+                <source>template.label.field_type</source>
+                <target>Typ pola</target>
+            </trans-unit>
+            <trans-unit id="template.label.parameters">
+                <source>template.label.parameters</source>
+                <target>Parametry</target>
+            </trans-unit>
+            <trans-unit id="template.label.is_required">
+                <source>template.label.is_required</source>
+                <target>Pole wymagane</target>
+            </trans-unit>
+            <trans-unit id="template.label.text">
+                <source>template.label.text</source>
+                <target>Pole tekstowe</target>
+            </trans-unit>
+            <trans-unit id="template.label.datetime">
+                <source>template.label.datetime</source>
+                <target>Data i czas</target>
+            </trans-unit>
+            <trans-unit id="template.label.select">
+                <source>template.label.select</source>
+                <target>Lista wyboru</target>
+            </trans-unit>
+            <trans-unit id="title.template_list">
+                <source>title.template_list</source>
+                <target>Lista szablonów</target>
+            </trans-unit>
+            <trans-unit id="action.create_template">
+                <source>action.create_template</source>
+                <target>Utwórz szablon</target>
+            </trans-unit>
+            <trans-unit id="menu.template_list">
+                <source>menu.template_list</source>
+                <target>Lista szablonów</target>
             </trans-unit>
         </body>
     </file>

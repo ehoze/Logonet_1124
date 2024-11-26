@@ -2,17 +2,80 @@
 
 {% block body_id 'admin_post_edit' %}
 
+{% set template_widget = form_widget(form.template) %}
+
 {% block main %}
     <h1>{{ 'title.edit_post'|trans({'id': post.id}) }}</h1>
 
-    {{ include('admin/blog/_form.html.twig', {
-        form: form,
-        button_label: 'action.save'|trans,
-        include_back_to_home_link: true,
-    }, with_context = false) }}
+    {{ form_start(form) }}
+        {% if post.template %}
+            <input type="hidden" name="template_id" value="{{ post.template.id }}">
+        {% endif %}
+        {{ form_row(form.title) }}
+        {{ form_row(form.summary) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form.publishedAt) }}
+        {{ form_row(form.tags) }}
+        
+        {# Dynamic template fields #}
+        {% if post.template %}
+            <div class="template-fields">
+                <h3>{{ 'template.label.fields'|trans }}</h3>
+                {% for field in post.template.fields %}
+                    <div class="form-group">
+                        <label>{{ field.displayName }}</label>
+                        {% if field.fieldType == 'text' %}
+                            <input type="text" 
+                                   name="template_fields[{{ field.systemName }}]" 
+                                   class="form-control"
+                                   {% if field.isRequired %}required{% endif %}
+                                   value="{{ post.templateFields[field.systemName]|default('') }}">
+                        {% elseif field.fieldType == 'date' %}
+                            <input type="date" 
+                                   name="template_fields[{{ field.systemName }}]"
+                                   class="form-control"
+                                   {% if field.isRequired %}required{% endif %}
+                                   value="{{ post.templateFields[field.systemName]|default('') }}">
+                        {% elseif field.fieldType == 'datetime' %}
+                            <input type="datetime-local"
+                                   name="template_fields[{{ field.systemName }}]"
+                                   class="form-control"
+                                   {% if field.isRequired %}required{% endif %}
+                                   value="{{ post.templateFields[field.systemName]|default('') }}">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-save" aria-hidden="true"></i> {{ 'action.save'|trans }}
+        </button>
+
+        <a href="{{ path('admin_post_index') }}" class="btn btn-link">
+            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
+        </a>
+        
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block sidebar %}
+    <div class="section">
+        <form action="{{ path('admin_post_change_template', {id: post.id}) }}" method="POST">
+            <select name="template" class="form-control">
+                <option value="" {% if post.template is null %}selected{% endif %}>{{ 'template.label.no_template'|trans }}</option>
+                {% for choice in form.template.vars.choices %}
+                    <option value="{{ choice.value }}" {% if post.template is not null and choice.value == post.template.id %}selected{% endif %}>
+                        {{ choice.label }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-secondary mt-2 btn-block">
+                <i class="fa fa-check" aria-hidden="true"></i> {{ 'action.change_template'|trans }}
+            </button>
+        </form>
+    </div>
+
     <div class="section">
         <a href="{{ path('admin_post_show', {id: post.id}) }}" class="btn btn-lg btn-block btn-success">
             <i class="fa fa-eye" aria-hidden="true"></i> {{ 'action.show_post'|trans }}

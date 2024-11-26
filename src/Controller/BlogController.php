@@ -18,6 +18,7 @@ use App\Event\CommentCreatedEvent;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
 use App\Repository\TagRepository;
+use App\Repository\TemplateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,7 +60,7 @@ final class BlogController extends AbstractController
         // Every template name also has two extensions that specify the format and
         // engine for that template.
         // See https://symfony.com/doc/current/templates.html#template-naming
-        return $this->render('blog/index.'.$_format.'.twig', [
+        return $this->render('blog/index.' . $_format . '.twig', [
             'paginator' => $latestPosts,
             'tagName' => $tag?->getName(),
         ]);
@@ -73,7 +74,7 @@ final class BlogController extends AbstractController
      * See https://symfony.com/doc/current/doctrine.html#automatically-fetching-objects-entityvalueresolver
      */
     #[Route('/posts/{slug}', name: 'blog_post', methods: ['GET'])]
-    public function postShow(Post $post): Response
+    public function postShow(Post $post, TemplateRepository $templateRepository): Response
     {
         // Symfony's 'dump()' function is an improved version of PHP's 'var_dump()' but
         // it's not available in the 'prod' environment to prevent leaking sensitive information.
@@ -89,7 +90,9 @@ final class BlogController extends AbstractController
         // You can also leverage Symfony's 'dd()' function that dumps and
         // stops the execution
 
-        return $this->render('blog/post_show.html.twig', ['post' => $post]);
+        $template = $templateRepository->find($post->getTemplate()->getId());
+        return $this->render('blog/post_show.html.twig', ['post' => $post, 'template' => $template]);
+        // return $this->render('blog/post_show.html.twig', ['post' => $post]);
     }
 
     /**

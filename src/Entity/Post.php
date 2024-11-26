@@ -81,6 +81,13 @@ class Post
     #[Assert\Count(max: 4, maxMessage: 'post.too_many_tags')]
     private Collection $tags;
 
+    #[ORM\ManyToOne(targetEntity: Template::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Template $template = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $templateFields = [];
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -121,6 +128,16 @@ class Post
     public function setContent(?string $content): void
     {
         $this->content = $content;
+    }
+
+    public function getTemplate(): ?Template
+    {
+        return $this->template;
+    }
+    public function setTemplate(?Template $template): self
+    {
+        $this->template = $template;
+        return $this;
     }
 
     public function getPublishedAt(): \DateTime
@@ -194,5 +211,16 @@ class Post
     public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    public function getTemplateFields(): ?array
+    {
+        return $this->templateFields;
+    }
+
+    public function setTemplateFields(?array $templateFields): self
+    {
+        $this->templateFields = $templateFields;
+        return $this;
     }
 }
