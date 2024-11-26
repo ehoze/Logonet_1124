@@ -28,6 +28,11 @@
             <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.back_to_blog'|trans }}
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('template_search', {systemName: '__start'}) }}">
+            <i class="fa fa-search"></i> {{ 'menu.searchTemplate'|trans }}
+        </a>
+    </li>
 {% endblock %}
 
 {% block javascripts %}

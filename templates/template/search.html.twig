@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'template_search' %}
+
+{% block main %}
+    <h1>{{ template.displayName }}</h1>
+    
+    {{ component('template_search', {
+        template: template,
+        query: query
+    }) }}
+{% endblock %}
+
+{% block sidebar %}
+    <div class="section">
+        <h4>{{ 'template.available_templates'|trans }}</h4>
+        {% for template in templates %}
+            <a href="{{ path('template_search', {systemName: template.systemName}) }}"
+               class="d-block mb-2 {% if app.request.get('systemName') == template.systemName %}font-weight-bold{% endif %}">
+                {{ template.displayName }}
+            </a>
+        {% endfor %}
+    </div>
+
+    {{ parent() }}
+{% endblock %} 

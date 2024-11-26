@@ -99,4 +99,15 @@ class Template
         }
         return $this;
     }
+
+    public function getFieldBySystemName(string $systemName): ?TemplateField
+    {
+        foreach ($this->fields as $field) {
+            if ($field->getSystemName() === $systemName) {
+                return $field;
+            }
+        }
+        
+        return null;
+    }
 }

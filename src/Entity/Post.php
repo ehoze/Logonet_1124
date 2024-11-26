@@ -85,6 +85,9 @@ class Post
     #[ORM\JoinColumn(nullable: true)]
     private ?Template $template = null;
 
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $templateFields = [];
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -208,5 +211,16 @@ class Post
     public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    public function getTemplateFields(): ?array
+    {
+        return $this->templateFields;
+    }
+
+    public function setTemplateFields(?array $templateFields): self
+    {
+        $this->templateFields = $templateFields;
+        return $this;
     }
 }

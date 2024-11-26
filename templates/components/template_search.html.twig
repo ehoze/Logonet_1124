@@ -1,0 +1,62 @@
+<div {{ attributes }}>
+    <form method="get" class="mb-4">
+        {% for field in this.template.fields %}
+            <div class="form-group mb-3">
+                <label>{{ field.displayName }}</label>
+                
+                {% if field.fieldType == 'text' %}
+                    <input type="text"
+                           name="fields[{{ field.systemName }}]"
+                           class="form-control"
+                           value="{{ this.query.fields[field.systemName]|default('') }}"
+                           data-model="query.fields.{{ field.systemName }}">
+
+                {% elseif field.fieldType in ['date', 'datetime'] %}
+                    <div class="row">
+                        <div class="col">
+                            <label>Od</label>
+                            <input type="{{ field.fieldType }}"
+                                   name="fields[{{ field.systemName }}][from]"
+                                   class="form-control"
+                                   value="{{ this.query.fields[field.systemName].from|default('') }}"
+                                   data-model="query.fields.{{ field.systemName }}.from">
+                        </div>
+                        <div class="col">
+                            <label>Do</label>
+                            <input type="{{ field.fieldType }}"
+                                   name="fields[{{ field.systemName }}][to]"
+                                   class="form-control"
+                                   value="{{ this.query.fields[field.systemName].to|default('') }}"
+                                   data-model="query.fields.{{ field.systemName }}.to">
+                        </div>
+                    </div>
+
+                {% elseif field.fieldType == 'select' %}
+                    <select name="fields[{{ field.systemName }}]"
+                            class="form-control"
+                            data-model="query.fields.{{ field.systemName }}">
+                        <option value="">Wszystkie</option>
+                        {% for option in field.parameters.options|default([]) %}
+                            <option value="{{ option }}"
+                                    {% if this.query.fields[field.systemName] == option %}selected{% endif %}>
+                                {{ option }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-search"></i> {{ 'action.search'|trans }}
+        </button>
+    </form>
+
+    {# {% for post in this.posts %} #}
+        {# {{ include('blog/_post.html.twig') }} #}
+    {# {% else %} #}
+        {% if this.query is not empty %}
+            {{ 'post.search_no_results'|trans }}
+        {% endif %}
+    {# {% endfor %} #}
+</div> 

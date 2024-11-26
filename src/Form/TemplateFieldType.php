@@ -7,9 +7,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\CallbackTransformer;
 
 class TemplateFieldType extends AbstractType
 {
@@ -44,10 +45,35 @@ class TemplateFieldType extends AbstractType
             ->add('parameters', TextType::class, [
                 'label' => 'template.label.parameters',
                 'required' => false,
+                'help' => 'Dla pola tekstowego: {"maxLength": 255}, dla listy rozwijanej: {"options": ["opcja1", "opcja2"]}',
                 'attr' => [
-                    'placeholder' => '{"maxLength": 255} lub {"options": ["opcja1", "opcja2"]}'
-                ]
+                    'placeholder' => 'Wprowadź parametry w formacie JSON'
+                ],
+                'invalid_message' => 'Wprowadź poprawny format JSON'
             ]);
+
+        $builder->get('parameters')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($parametersAsArray) {
+                    if (null === $parametersAsArray) {
+                        return '';
+                    }
+                    return json_encode($parametersAsArray, JSON_PRETTY_PRINT);
+                },
+                function ($parametersAsString) {
+                    if (empty($parametersAsString)) {
+                        return [];
+                    }
+                    
+                    $decoded = json_decode($parametersAsString, true);
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        throw new TransformationFailedException('Nieprawidłowy format JSON');
+                    }
+                    
+                    return $decoded;
+                }
+            ))
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

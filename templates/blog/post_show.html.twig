@@ -12,6 +12,23 @@
 
     {{ post.content|markdown_to_html|sanitize_html }}
 
+    {% if post.templateFields is not empty %}
+        <div class="post-template-fields">
+            <table class="table">
+                <tbody>
+                {% for field in post.template.fields %}
+                    {% if post.templateFields[field.systemName] is defined and post.templateFields[field.systemName] is not empty or field.isRequired %}
+                        <tr>
+                            <td>{{ field.displayName }}</td>
+                            <td>{{ post.templateFields[field.systemName]|default('') }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
     {{ include('blog/_post_tags.html.twig') }}
 
     <div id="post-add-comment" class="well">
